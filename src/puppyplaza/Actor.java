@@ -6,21 +6,31 @@ import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
 
 public class Actor {
-	private Sprite[] sprites; //0: idle | 1: init | 2: death
 	private String name;
 	private String dia;
-	private int mode; //dictates which sprite is being shown
-	private boolean isMobile;
+	private Sprite[] sprites; //0: idle | 1: init | 2: death
+	protected int mode; //dictates which sprite is being shown
 	
+	/**
+	 * @param n name
+	 * @param d description
+	 * @param s sprites
+	 */
+	protected Actor(String n, String d) {
+		name = n;
+		dia = d;
+		mode = 0; //init phase
+	} //Actor()
+	
+	/**
+	 * @param n name
+	 * @param d description
+	 * @param s sprites
+	 */
 	public Actor(String n, String d, Sprite ... s) {
 		name = n;
 		dia = d;
 		sprites = s;
-		for(Sprite sp : sprites) {
-			if(sp instanceof MobileSprite) {
-				isMobile = true;
-			} //if
-		} //for
 		mode = 0; //init phase
 	} //Actor()
 	
@@ -34,9 +44,11 @@ public class Actor {
 		} //for
 	} //setOnMouseClicked()
 	
+	/**
+	 * @return next Sprite for Animation sequence
+	 */
 	public ImageView nextSprite() {
-		ImageView imgv = sprites[mode].next();
-		return imgv;
+		return sprites[mode].next();
 	} //nextSprite()
 	
 	public Sprite[] getSprites() {
@@ -62,8 +74,4 @@ public class Actor {
 	public void setDia(String dia) {
 		this.dia = dia;
 	} //setDia()
-
-	public boolean isMobile() {
-		return isMobile;
-	}
 } //Actor

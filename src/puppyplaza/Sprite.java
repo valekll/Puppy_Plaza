@@ -16,16 +16,12 @@ public class Sprite {
 	protected int totalFrames; //total frames
 	
 	public Sprite(double x, double y, int cyclesPerSec, Image ... images) {
-		cc = 0;
-		cps = cyclesPerSec;
-		xax = x;
-		yax = y;
+		this(x, y, cyclesPerSec, imageToImageViewArr(images));
 		imgs = images;
-		imgvs = imageToImageViewArr(imgs);
-		totalFrames = imgvs.length;
 	} //Sprite()
 	
 	public Sprite(double x, double y, int cyclesPerSec, ImageView ... imageViews) {
+		cf = 0;
 		cc = 0;
 		cps = cyclesPerSec;
 		xax = x;

@@ -7,19 +7,17 @@ public class MobileSprite extends Sprite {
 	protected int dir; //direction
 	protected int start;
 	protected int end;
+	protected double speed;
 	
-	public MobileSprite(double x, double y, int cyclesPerSec, Image ... images) {
-		super(x, y, cyclesPerSec, images);
-		dir = 0;
-		start = 0;
-		totalFrames = totalFrames / 4;
-		end = start + totalFrames;
+	public MobileSprite(double x, double y, double s, int cyclesPerSec, Image ... images) {
+		this(x, y, s, cyclesPerSec, imageToImageViewArr(images));
 	} //MobileSprite()
 
-	public MobileSprite(double x, double y, int cyclesPerSec, ImageView ... imageViews) {
+	public MobileSprite(double x, double y, double s, int cyclesPerSec, ImageView ... imageViews) {
 		super(x, y, cyclesPerSec, imageViews);
 		dir = 0;
 		start = 0;
+		speed = s;
 		totalFrames = totalFrames / 4;
 		end = start + totalFrames;
 	} //MobileSprite()
@@ -28,44 +26,42 @@ public class MobileSprite extends Sprite {
 	 * Cycles to next ImageView sprite
 	 * @return the next ImageView
 	 */
-	public ImageView cycle(int d) {
+	@Override
+	public ImageView next() {
 		cc++;
 		if(cc == cps) { //once every 10 frames
-			cc = 0; //reset pps
-			boolean check = !chDir(d);
-			if(check) { //check for changes in direction
-				cf++;
-				if(cf >= end) {
-					cf = start;
-				} //if
+			cc = 0; //reset cps
+			//boolean check = !chDir(d);
+			//if(check) { //check for changes in direction
+			cf++;
+			if(cf >= end) {
+				cf = start;
 			} //if
-			move(check);
+			//} //if
+			move();
 		} //if
 		ImageView img = imgvs[cf];
 		img.setX(xax);
 		img.setY(yax);
 		return img;
-	} //cycle()
+	} //next()
 	
 	/**
 	 * Move 10 pixels in a set direction
 	 */
-	private boolean move(boolean mv) {
-		if(mv) {
-			if(dir == 0) { //down
-				yax += 10.0;
-			} //if
-			else if(dir == 1) { //left
-				xax -= 10.0;
-			} //else if
-			else if(dir == 2) { //right
-				xax += 10.0;
-			} //else if
-			else if(dir == 3) { //up
-				yax -= 10.0;
-			} //else if
+	private void move() {
+		if(dir == 0) { //down
+			yax += speed;
 		} //if
-		return mv;
+		else if(dir == 1) { //left
+			xax -= speed;
+		} //else if
+		else if(dir == 2) { //right
+			xax += speed;
+		} //else if
+		else if(dir == 3) { //up
+			yax -= speed;
+		} //else if
 	} //move()
 	
 	/**
@@ -90,6 +86,27 @@ public class MobileSprite extends Sprite {
 	} //rdlu
 	
 	/**
+	 * Gives directions for a counter-clockwise circuit
+	 * @param d current direction
+	 * @return new direction
+	 */
+	public static int ldru(int d) {
+		if(d == 0) { //down
+			d = 2;
+		} //if
+		else if(d == 1) { //left
+			d = 0;
+		} //else if
+		else if(d == 2) { //right
+			d = 3;
+		} //else if
+		else if(d == 3) { //up
+			d = 1;
+		} //else if
+		return d;
+	} //ldru
+	
+	/**
 	 * Changes direction of movement d>l>r>u>etc
 	 */
 	private void chDir() {
@@ -102,7 +119,8 @@ public class MobileSprite extends Sprite {
 	} //chDir()
 	
 	/**
-	 * Changes direction of movement
+	 * Changes direction of movement.
+	 * @return true if successful
 	 */
 	public boolean chDir(int d) {
 		if(dir <= 3 && dir >= 0 && dir != d) {
