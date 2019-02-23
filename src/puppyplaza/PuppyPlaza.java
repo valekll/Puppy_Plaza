@@ -38,6 +38,7 @@ public class PuppyPlaza extends Application {
 	double mouseX;
 	double mouseY;
 	double t; //keep track of time
+	private Image temp;
    
 
 	public List<ImageView> getSprites() {
@@ -63,7 +64,9 @@ public class PuppyPlaza extends Application {
 		
 		///Put Mobile Actors in place
 		for(int i = 0; i < mactors.size(); i++) {
-			mactors.get(i).orbit();
+			if(i < 1 && i > 10) {
+				mactors.get(i).orbit();
+			} //if
 			if(mimages.get(i) != null) { //remove images from last scene
 				group.getChildren().remove(mimages.get(i));
 			} //if
@@ -127,6 +130,25 @@ public class PuppyPlaza extends Application {
 	} //makePupper()
 	
 	/**
+	 * Generates a slime Mobile Actor at a given loc.
+	 * @param x x loc
+	 * @param y y loc
+	 * @param s speed
+	 */
+	public static MobileActor makeSlime(double x, double y) {
+		Image img = new Image("slime_idle128.png"); //http://i.imgur.com/HnW7KqH.png original
+		ImageView[] temp = new ImageView[5];
+		for(int i = 0; i < 5; i++) {
+				temp[i] = new ImageView(img);
+				temp[i].setViewport(new Rectangle2D(i * 128, 0, 128, 128));
+				temp[i].setOnMouseClicked(e -> System.out.println("slchhh."));
+		} //for 
+		Sprite psprite = new Sprite(x, y, 10, temp);
+		MobileActor slime = new MobileActor("Slime", "I'm not a bad slime.", psprite);
+		return slime;
+	} //makeSlime()
+	
+	/**
 	 * Generates a grass Actor at a given loc.
 	 * @param x x loc
 	 * @param y y loc
@@ -177,11 +199,29 @@ public class PuppyPlaza extends Application {
 		else if(i == 7) {
 			img = new Image("test_grass12.png");
 		} //else if
+		
 		ImageView temp = new ImageView(img);
 		temp.setX(x);
 		temp.setY(y);
 		return temp;
 	} //makeTestGrass()
+	
+	/**
+	 * Generates a brick1 selected Actor at a given loc.
+	 * @param x x loc
+	 * @param y y loc
+	 */
+	public static ImageView makeBrick(double x, double y, int i) {
+		Image img = new Image("brick1_128.png");
+		if(i == 2 ) {
+			System.out.println("2 at:\n" + x + "\n" +y);
+			img = new Image("brick2_128.png");
+		} //if
+		ImageView temp = new ImageView(img);
+		temp.setX(x);
+		temp.setY(y);
+		return temp;
+	} //makeTestBrick()
 	
 	/**
 	 * creates a button that lets you build things
@@ -216,12 +256,15 @@ public class PuppyPlaza extends Application {
 	//  }//setInnerBuildings
 
 	public void fillBackground() {
-		double s = 64;
-		for(int i = 0; i < 40; i++) {
-			   for(int j = 0; j < 23; j++) {
-				   background.add(makeTestGrass(s * (double)i, s * (double)j, random.nextInt(8)));
-			   } //for
-		   } //for
+		double s = 128;
+		int width = 20;//40;
+		int height = 13;//23;
+		for(int i = 0; i < width; i++) {
+			for(int j = 0; j < height; j++) {
+				//background.add(makeTestGrass(s * (double)i, s * (double)j, random.nextInt(8)));
+				background.add(makeBrick(s * (double)i, s * (double)j, random.nextInt(3)));
+			} //for
+		} //for
 	} //fillBackGround()
 	
 	/**
@@ -250,6 +293,12 @@ public class PuppyPlaza extends Application {
 	   mactors = new ArrayList<MobileActor>();
 	   mactors.add(pupper);
 	   mimages.add(mactors.get(0).nextSprite());
+	
+	   for(int i = 0; i < 10; i++) {
+		   MobileActor slime = makeSlime(random.nextDouble() * 1280.0, random.nextDouble() * 720.0);
+		   mactors.add(slime);
+		   mimages.add(mactors.get(i + 1).nextSprite());
+	   } //for
 	   //group.getChildren().add(images.get(0));
 
 	   actors = new ArrayList<Actor>();

@@ -9,6 +9,23 @@ public class MobileActor extends Actor {
 	private MobileSprite[] msprites;
 	private boolean orbit; //orbit on (t) or off (f)
 	private boolean orbitmode; //clockwise (t) or counterclockwise (f)
+	protected int msmode; //mode for motion sprites -1: denotes regular sprites being used
+	
+	/**
+	 * @param n name
+	 * @param d description
+	 * @param s sprites
+	 */
+	public MobileActor(String n, String d, Sprite ... s) {
+		super(n, d);
+		sprites = s;
+		dir = 0;
+		cps = 0;
+		msmode = -1;
+		orbitrate = 180;
+		orbit = false; //don't orbit unless told otherwise
+		orbitmode = true; //start clockwise
+	} //MobileActor()
 	
 	/**
 	 * @param n name
@@ -20,6 +37,7 @@ public class MobileActor extends Actor {
 		msprites = s;
 		dir = 0;
 		cps = 0;
+		msmode = 0;
 		orbitrate = 180;
 		orbit = false; //don't orbit unless told otherwise
 		orbitmode = true; //start clockwise
@@ -75,7 +93,10 @@ public class MobileActor extends Actor {
 	 */
 	@Override
 	public ImageView nextSprite() {
-		return msprites[mode].next();
+		if(msmode != -1) {
+			return msprites[msmode].next();
+		} //if
+		return sprites[mode].next();
 	} //nextMSprite()
 	
 	/**
@@ -119,4 +140,18 @@ public class MobileActor extends Actor {
 			msprites[i].chDir(dir);
 		} //for 
 	} //alignSpriteDirs()
+	
+	/**
+	 * Turns movement of the sprite off.
+	 */
+	public void toStationary() {
+		msmode = -1;
+	} //toStationary()
+	
+	/**
+	 * Turns movement of the sprite on.
+	 */
+	public void toMoving() {
+		msmode = 0;
+	} //toMoving()
 } //MobileActor

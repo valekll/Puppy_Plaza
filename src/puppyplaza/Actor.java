@@ -8,7 +8,7 @@ import javafx.event.EventHandler;
 public class Actor {
 	private String name;
 	private String dia;
-	private Sprite[] sprites; //0: idle | 1: init | 2: death
+	protected Sprite[] sprites; //0: idle | 1: init | 2: death
 	protected int mode; //dictates which sprite is being shown
 	
 	/**
@@ -74,4 +74,9 @@ public class Actor {
 	public void setDia(String dia) {
 		this.dia = dia;
 	} //setDia()
+	
+	public void setModeIdle() {
+		mode = 0;
+	} //setModeIdle()
+	
 } //Actor
