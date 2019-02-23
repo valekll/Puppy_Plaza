@@ -117,6 +117,6 @@ public class MobileActor extends Actor {
 	private void alignSpriteDirs() {
 		for(int i = 0; i < msprites.length; i++) {
 			msprites[i].chDir(dir);
-		} //for
+		} //for 
 	} //alignSpriteDirs()
 } //MobileActor

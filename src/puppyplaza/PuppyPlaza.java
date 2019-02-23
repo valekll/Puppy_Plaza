@@ -79,8 +79,8 @@ public class PuppyPlaza extends Application {
 	public void checkMouseHover() {
 		for(int i = 0; i < background.size(); i++) {
 			final int mrbreincarnate = i;
-			background.get(i).setOnMouseMoved(e-> background.get(mrbreincarnate).setImage(new Image("grass_selected.png")));
-			background.get(i).setOnMouseExited(e-> background.get(mrbreincarnate).setImage(new Image("grass.png")));
+			//background.get(i).setOnMouseMoved(e-> background.get(mrbreincarnate).setImage(new Image("grass_selected.png")));
+			//background.get(i).setOnMouseExited(e-> background.get(mrbreincarnate).setImage(new Image("grass.png")));
 			background.get(i).setOnMouseClicked(e-> {
 				mouseX = e.getX();
 				mouseY = e.getY();
@@ -109,6 +109,7 @@ public class PuppyPlaza extends Application {
 	 * Generates a puppy Mobile Actor at a given loc.
 	 * @param x x loc
 	 * @param y y loc
+	 * @param s speed
 	 */
 	public static MobileActor makePupper(double x, double y, double s) {
 		Image img = new Image("https://i.imgur.com/JgPQLX6.png"); //http://i.imgur.com/HnW7KqH.png original
@@ -136,7 +137,7 @@ public class PuppyPlaza extends Application {
 		temp.setX(x);
 		temp.setY(y);
 		return temp;
-	} //makeGrass
+	} //makeGrass()
 	
 	/**
 	 * Generates a grass selected Actor at a given loc.
@@ -149,7 +150,38 @@ public class PuppyPlaza extends Application {
 		temp.setX(x);
 		temp.setY(y);
 		return temp;
-	} //makeGrass
+	} //makeGrassSelected()
+	
+	/**
+	 * Generates a grass selected Actor at a given loc.
+	 * @param x x loc
+	 * @param y y loc
+	 */
+	public static ImageView makeTestGrass(double x, double y, int i) {
+		Image img = new Image("test_grass13.png");
+		if(i == 2) {
+			img = new Image("test_grass15.png");
+		} //if
+		else if(i == 3) {
+			img = new Image("test_grass14.png");
+		} //else if
+		else if(i == 4) {
+			img = new Image("test_grass16.png");
+		} //else if
+		else if(i == 5) {
+			img = new Image("test_grass10.png");
+		} //else if
+		else if(i == 6) {
+			img = new Image("test_grass11.png");
+		} //else if
+		else if(i == 7) {
+			img = new Image("test_grass12.png");
+		} //else if
+		ImageView temp = new ImageView(img);
+		temp.setX(x);
+		temp.setY(y);
+		return temp;
+	} //makeTestGrass()
 	
 	/**
 	 * creates a button that lets you build things
@@ -183,6 +215,15 @@ public class PuppyPlaza extends Application {
 	//     } else {money += 10;}
 	//  }//setInnerBuildings
 
+	public void fillBackground() {
+		double s = 64;
+		for(int i = 0; i < 40; i++) {
+			   for(int j = 0; j < 23; j++) {
+				   background.add(makeTestGrass(s * (double)i, s * (double)j, random.nextInt(8)));
+			   } //for
+		   } //for
+	} //fillBackGround()
+	
 	/**
 	 * sets up the nodes and adds them to the group
 	 */
@@ -213,11 +254,14 @@ public class PuppyPlaza extends Application {
 
 	   actors = new ArrayList<Actor>();
 	   
-	   for(int i = 0; i < 15; i++) { //cols
+	   /*for(int i = 0; i < 15; i++) { //cols
 	        for(int j = 0; j < 8; j++) { //rows
 	        	background.add(makeGrass(90.0 * (double)i, 90.0 * (double)j + 1.0));
 	        } //for
 	   } //for
+	   */
+	   
+	   fillBackground();
 	   
 	   //for(int i = 0; i < images.size(); i++) {
 	   //group.getChildren().add(images.get(i));
