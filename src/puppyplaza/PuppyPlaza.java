@@ -51,7 +51,6 @@ public class PuppyPlaza extends Application {
 	 * A cycle update. Refreshes all current information and renders a frame.
 	 */
 	public void update() {
-		
 		///Put Actors in place
 		for(int i = 0; i < actors.size(); i++) {
 			if(images.get(i) != null) { //remove images from last scene
@@ -64,9 +63,7 @@ public class PuppyPlaza extends Application {
 		
 		///Put Mobile Actors in place
 		for(int i = 0; i < mactors.size(); i++) {
-			if(i < 1 && i > 10) {
-				mactors.get(i).orbit();
-			} //if
+			mactors.get(i).orbit();
 			if(mimages.get(i) != null) { //remove images from last scene
 				group.getChildren().remove(mimages.get(i));
 			} //if
@@ -87,7 +84,7 @@ public class PuppyPlaza extends Application {
 			background.get(i).setOnMouseClicked(e-> {
 				mouseX = e.getX();
 				mouseY = e.getY();
-				spawnPupper(); 
+				spawnSlime(); 
 			});
 		} //4dd2ff
 	} //checkMouseHover
@@ -98,7 +95,7 @@ public class PuppyPlaza extends Application {
 	 */
 	public void spawnPupper() { 
 		MobileActor pupper = makePupper(mouseX - 20.0, mouseY - 20.0, 8.0 + (random.nextDouble() * 4.0));
-		if(random.nextDouble() >= .5) { //random orbit mode
+		if(random.nextBoolean()) { //random orbit mode
 			pupper.toggleOrbitMode();
 		} //if
 		pupper.setOrbitRate(random.nextInt(121) + 120);
@@ -107,6 +104,27 @@ public class PuppyPlaza extends Application {
 		mimages.add(mactors.get(mactors.indexOf(pupper)).nextSprite());
 		group.getChildren().add(mimages.get(mimages.size() - 1));
 	} //spawnPupper()
+	
+	/**
+	 * Spawns a puppy at current mouse location.
+	 */
+	public void spawnSlime() { 
+		MobileActor slime = makeSlime(mouseX - 60.0, mouseY - 60.0, 8.0 + (random.nextDouble() * 4.0));
+		if(random.nextBoolean()) {
+			if(random.nextBoolean()) { //random orbit mode
+				slime.toggleOrbitMode();
+			} //if
+		} //if
+		else {
+			slime.toStationary();
+			slime.toggleOrbit();
+		} //else
+		slime.setOrbitRate(random.nextInt(121) + 120);
+		slime.chDir(random.nextInt(4)); //random direction
+		mactors.add(slime);
+		mimages.add(mactors.get(mactors.indexOf(slime)).nextSprite());
+		group.getChildren().add(mimages.get(mimages.size() - 1));
+	} //spawnSlime()
   
 	/**
 	 * Generates a puppy Mobile Actor at a given loc.
@@ -124,8 +142,9 @@ public class PuppyPlaza extends Application {
 				temp[i * 3 + j].setOnMouseClicked(e -> System.out.println("bork"));
 			} //for
 		} //for 
-		MobileSprite psprite = new MobileSprite(x, y, s, 10, temp);
+		MobileSprite psprite = new MobileSprite(x, y, s, 10, 4, temp);
 		MobileActor pupper = new MobileActor("Puppy", "An Innocent Little Pupper.", psprite);
+		pupper.toggleOrbit();
 		return pupper;
 	} //makePupper()
 	
@@ -135,16 +154,34 @@ public class PuppyPlaza extends Application {
 	 * @param y y loc
 	 * @param s speed
 	 */
-	public static MobileActor makeSlime(double x, double y) {
-		Image img = new Image("slime_idle128.png"); //http://i.imgur.com/HnW7KqH.png original
+	public static MobileActor makeSlime(double x, double y, double s) {
+		Image img = new Image("slime_idle.png"); //http://i.imgur.com/HnW7KqH.png original
 		ImageView[] temp = new ImageView[5];
 		for(int i = 0; i < 5; i++) {
 				temp[i] = new ImageView(img);
 				temp[i].setViewport(new Rectangle2D(i * 128, 0, 128, 128));
 				temp[i].setOnMouseClicked(e -> System.out.println("slchhh."));
 		} //for 
-		Sprite psprite = new Sprite(x, y, 10, temp);
-		MobileActor slime = new MobileActor("Slime", "I'm not a bad slime.", psprite);
+		Sprite idlesprite = new Sprite(x, y, 10, temp);
+		Image[] imgdlru = new Image[4];
+		imgdlru[0] = new Image("slime_moveD.png");
+		imgdlru[1] = new Image("slime_moveL.png");
+		imgdlru[2] = new Image("slime_moveR.png");
+		imgdlru[3] = new Image("slime_moveU.png");
+		temp = new ImageView[24];
+		for(int i = 0; i < 4; i++) {
+			img = imgdlru[i];
+			for(int j = 0; j < 6; j++) {
+				temp[i * 6 + j] = new ImageView(img);
+				temp[i * 6 + j].setViewport(new Rectangle2D(j * 128, 0, 128, 128));
+				temp[i * 6 + j].setOnMouseClicked(e -> System.out.println("slchhh."));
+			} //for
+		} //for
+		MobileSprite movesprite = new MobileSprite(x, y, s, 10, 4, temp);
+		MobileActor slime = new MobileActor("Slime", "I'm not a bad slime.", movesprite);
+		slime.setMobileSprites(movesprite);
+		slime.setSprites(idlesprite);
+		slime.toggleOrbit();
 		return slime;
 	} //makeSlime()
 	
@@ -175,13 +212,16 @@ public class PuppyPlaza extends Application {
 	} //makeGrassSelected()
 	
 	/**
-	 * Generates a grass selected Actor at a given loc.
+	 * Generates a grass Actor at a given loc.
 	 * @param x x loc
 	 * @param y y loc
 	 */
 	public static ImageView makeTestGrass(double x, double y, int i) {
-		Image img = new Image("test_grass13.png");
-		if(i == 2) {
+		//Image img = new Image("test_grass13.png");
+		Image img = new Image("grass1.png");
+		System.out.println("Grass at: " + x + ", " + y);
+		
+		/*if(i == 2) {
 			img = new Image("test_grass15.png");
 		} //if
 		else if(i == 3) {
@@ -199,7 +239,7 @@ public class PuppyPlaza extends Application {
 		else if(i == 7) {
 			img = new Image("test_grass12.png");
 		} //else if
-		
+		*/
 		ImageView temp = new ImageView(img);
 		temp.setX(x);
 		temp.setY(y);
@@ -207,21 +247,51 @@ public class PuppyPlaza extends Application {
 	} //makeTestGrass()
 	
 	/**
-	 * Generates a brick1 selected Actor at a given loc.
+	 * Generates a brick Actor at a given loc.
 	 * @param x x loc
 	 * @param y y loc
 	 */
 	public static ImageView makeBrick(double x, double y, int i) {
 		Image img = new Image("brick1_128.png");
-		if(i == 2 ) {
-			System.out.println("2 at:\n" + x + "\n" +y);
+		if(i == 2) {
 			img = new Image("brick2_128.png");
+		} //if
+		if(i == 3) {
+			img = new Image("brick3_128.png");
+		} //if
+		if(i == 4) {
+			img = new Image("brick4_128.png");
+		} //if
+		if(i == 5) {
+			img = new Image("brick5_128.png");
 		} //if
 		ImageView temp = new ImageView(img);
 		temp.setX(x);
 		temp.setY(y);
 		return temp;
-	} //makeTestBrick()
+	} //makeBrick()
+	
+	/**
+	 * Generates a brick window Actor at a given loc.
+	 * @param x x loc
+	 * @param y y loc
+	 */
+	public static ImageView makeBrickWindow(double x, double y, int i) {
+		Image img = new Image("brick_window1.png");
+		if(i == 2) {
+			img = new Image("brick_window2.png");
+		} //if
+		if(i == 3) {
+			img = new Image("brick_window3.png");
+		} //if
+		if(i == 4) {
+			img = new Image("brick_window4.png");
+		} //if
+		ImageView temp = new ImageView(img);
+		temp.setX(x);
+		temp.setY(y);
+		return temp;
+	} //makeBrickWindow()
 	
 	/**
 	 * creates a button that lets you build things
@@ -261,8 +331,29 @@ public class PuppyPlaza extends Application {
 		int height = 13;//23;
 		for(int i = 0; i < width; i++) {
 			for(int j = 0; j < height; j++) {
-				//background.add(makeTestGrass(s * (double)i, s * (double)j, random.nextInt(8)));
-				background.add(makeBrick(s * (double)i, s * (double)j, random.nextInt(3)));
+				if(j == 0 && i < 2) {
+					if(i == 0) {
+						background.add(makeBrickWindow(s * (double)i, s * (double)j, 1));
+					} //if
+					else if(i == 1) {
+						background.add(makeBrickWindow(s * (double)i, s * (double)j, 2));
+					} //else if
+				} //if
+				else if(j == 1 && i < 2) {
+					if(i == 0) {
+						background.add(makeBrickWindow(s * (double)i, s * (double)j, 3));
+					} //if
+					else if(i == 1) {
+						background.add(makeBrickWindow(s * (double)i, s * (double)j, 4));
+					} //else if
+				} //else if
+				else if(j >= (height / 2)) {
+					background.add(makeTestGrass(s * (double)i, s * (double)j, random.nextInt(1)));
+				} //else if
+				else {
+					//background.add(makeTestGrass(s * (double)i, s * (double)j, random.nextInt(10)));
+					background.add(makeBrick(s * (double)i, s * (double)j, random.nextInt(14)));
+				} //else
 			} //for
 		} //for
 	} //fillBackGround()
@@ -289,15 +380,15 @@ public class PuppyPlaza extends Application {
 	   //} //for 
 	   ///
 	   
-	   MobileActor pupper = makePupper(270.0, 250.0, 10.0);
+	   //MobileActor pupper = makePupper(270.0, 250.0, 10.0);
 	   mactors = new ArrayList<MobileActor>();
-	   mactors.add(pupper);
-	   mimages.add(mactors.get(0).nextSprite());
+	   //mactors.add(pupper);
+	   //mimages.add(mactors.get(0).nextSprite());
 	
 	   for(int i = 0; i < 10; i++) {
-		   MobileActor slime = makeSlime(random.nextDouble() * 1280.0, random.nextDouble() * 720.0);
+		   MobileActor slime = makeSlime(random.nextDouble() * (1280.0 - 128.0), random.nextDouble() * (720.0 - 128.0), 10.0);
 		   mactors.add(slime);
-		   mimages.add(mactors.get(i + 1).nextSprite());
+		   mimages.add(mactors.get(i).nextSprite());
 	   } //for
 	   //group.getChildren().add(images.get(0));
 

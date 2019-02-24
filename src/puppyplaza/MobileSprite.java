@@ -5,20 +5,22 @@ import javafx.scene.image.ImageView;
 
 public class MobileSprite extends Sprite {
 	protected int dir; //direction
+	protected int dirnum; //number of directions
 	protected int start;
 	protected int end;
 	protected double speed;
 	
-	public MobileSprite(double x, double y, double s, int cyclesPerSec, Image ... images) {
-		this(x, y, s, cyclesPerSec, imageToImageViewArr(images));
+	public MobileSprite(double x, double y, double s, int cyclesPerSec, int dn, Image ... images) {
+		this(x, y, s, cyclesPerSec, dn, imageToImageViewArr(images));
 	} //MobileSprite()
 
-	public MobileSprite(double x, double y, double s, int cyclesPerSec, ImageView ... imageViews) {
+	public MobileSprite(double x, double y, double s, int cyclesPerSec, int dn, ImageView ... imageViews) {
 		super(x, y, cyclesPerSec, imageViews);
 		dir = 0;
+		dirnum = dn;
 		start = 0;
 		speed = s;
-		totalFrames = totalFrames / 4;
+		totalFrames = totalFrames / dn;
 		end = start + totalFrames;
 	} //MobileSprite()
 	
@@ -123,7 +125,7 @@ public class MobileSprite extends Sprite {
 	 * @return true if successful
 	 */
 	public boolean chDir(int d) {
-		if(dir <= 3 && dir >= 0 && dir != d) {
+		if(dir <= 3 && dir >= 0 && dir != d && dirnum == 4) {
 			dir = d;
 			if(dir == 0) { //down
 				start = 0;
@@ -141,6 +143,10 @@ public class MobileSprite extends Sprite {
 			cf = start;
 			return true;
 		} //if
+		else if(dir <= 3 && dir >= 0 && dir != d && dirnum == 1) {
+			dir = d;
+			return true;
+		} //else if
 		return false;
 	} //chDir()
 	

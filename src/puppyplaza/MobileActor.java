@@ -77,16 +77,22 @@ public class MobileActor extends Actor {
 	 * @return true if successful
 	 */
 	public boolean orbit() {
-		cps++;
-		if(cps == orbitrate) {
-			cps = 0;
-			if(orbitmode) {
-				return chDir(MobileSprite.rdlu(dir));
+		if(orbit) {
+			cps++;
+			if(cps == orbitrate) {
+				cps = 0;
+				if(orbitmode) {
+					return chDir(MobileSprite.rdlu(dir));
+				} //if
+				return chDir(MobileSprite.ldru(dir));
 			} //if
-			return chDir(MobileSprite.ldru(dir));
 		} //if
 		return false;
 	} //orbit()
+	
+	public void setMobileSprites(MobileSprite ... ms) {
+		this.msprites = ms;
+	} //setMobileSprites()
 	
 	/**
 	 * @return next Sprite for Animation sequence

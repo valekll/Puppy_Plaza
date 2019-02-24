@@ -55,7 +55,7 @@ public class Actor {
 		return sprites;
 	} //getSprites()
 
-	public void setSprites(Sprite[] sprites) {
+	public void setSprites(Sprite ... sprites) {
 		this.sprites = sprites;
 	} //setSprites()
 
