@@ -186,6 +186,25 @@ public class PuppyPlaza extends Application {
 	} //makeSlime()
 	
 	/**
+	 * Generates a torch Actor at a given loc.
+	 * @param x x loc
+	 * @param y y loc
+	 * @param s speed
+	 */
+	public static Actor makeTorch(double x, double y) {
+		Image img = new Image("torch1.png"); //http://i.imgur.com/HnW7KqH.png original
+		ImageView[] temp = new ImageView[6];
+		for(int i = 0; i < 6; i++) {
+				temp[i] = new ImageView(img);
+				temp[i].setViewport(new Rectangle2D(i * 128, 0, 128, 128));
+				temp[i].setOnMouseClicked(e -> System.out.println("Fwwhwhhh."));
+		} //for 
+		Sprite spr = new Sprite(x, y, 10, temp);
+		MobileActor torch = new MobileActor("Torch", "Don't touch the flame. It's hot.", spr);
+		return torch;
+	} //makeTorch()
+	
+	/**
 	 * Generates a grass Actor at a given loc.
 	 * @param x x loc
 	 * @param y y loc
@@ -219,7 +238,6 @@ public class PuppyPlaza extends Application {
 	public static ImageView makeTestGrass(double x, double y, int i) {
 		//Image img = new Image("test_grass13.png");
 		Image img = new Image("grass1.png");
-		System.out.println("Grass at: " + x + ", " + y);
 		
 		/*if(i == 2) {
 			img = new Image("test_grass15.png");
@@ -247,7 +265,7 @@ public class PuppyPlaza extends Application {
 	} //makeTestGrass()
 	
 	/**
-	 * Generates a brick Actor at a given loc.
+	 * Generates a brick at a given loc.
 	 * @param x x loc
 	 * @param y y loc
 	 */
@@ -272,7 +290,7 @@ public class PuppyPlaza extends Application {
 	} //makeBrick()
 	
 	/**
-	 * Generates a brick window Actor at a given loc.
+	 * Generates a brick window at a given loc.
 	 * @param x x loc
 	 * @param y y loc
 	 */
@@ -327,8 +345,8 @@ public class PuppyPlaza extends Application {
 
 	public void fillBackground() {
 		double s = 128;
-		int width = 20;//40;
-		int height = 13;//23;
+		int width = 10;//40;
+		int height = 7;//23;
 		for(int i = 0; i < width; i++) {
 			for(int j = 0; j < height; j++) {
 				if(j == 0 && i < 2) {
@@ -385,7 +403,7 @@ public class PuppyPlaza extends Application {
 	   //mactors.add(pupper);
 	   //mimages.add(mactors.get(0).nextSprite());
 	
-	   for(int i = 0; i < 10; i++) {
+	   for(int i = 0; i < 2; i++) {
 		   MobileActor slime = makeSlime(random.nextDouble() * (1280.0 - 128.0), random.nextDouble() * (720.0 - 128.0), 10.0);
 		   mactors.add(slime);
 		   mimages.add(mactors.get(i).nextSprite());
@@ -393,6 +411,12 @@ public class PuppyPlaza extends Application {
 	   //group.getChildren().add(images.get(0));
 
 	   actors = new ArrayList<Actor>();
+	   
+	   for(int i = 0; i < 5; i++) {
+		   Actor torch = makeTorch(random.nextDouble() * (1280.0 - 128.0), random.nextDouble() * (720.0 - 128.0));
+		   actors.add(torch);
+		   images.add(actors.get(i).nextSprite());
+	   } //for
 	   
 	   /*for(int i = 0; i < 15; i++) { //cols
 	        for(int j = 0; j < 8; j++) { //rows
