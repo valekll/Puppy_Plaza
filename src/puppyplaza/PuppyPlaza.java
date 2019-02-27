@@ -205,6 +205,44 @@ public class PuppyPlaza extends Application {
 	} //makeTorch()
 	
 	/**
+	 * Generates a wolf Actor at a given loc.
+	 * @param x x loc
+	 * @param y y loc
+	 * @param s speed
+	 */
+	public static Actor makeWolf(double x, double y) {
+		Image img = new Image("wolf sprite test.png"); //http://i.imgur.com/HnW7KqH.png original
+		ImageView[] temp = new ImageView[6];
+		for(int i = 0; i < 6; i++) {
+				temp[i] = new ImageView(img);
+				temp[i].setViewport(new Rectangle2D(i * 64, 0, 64, 64));
+				temp[i].setOnMouseClicked(e -> System.out.println("GRRRRRRRRR."));
+		} //for 
+		Sprite spr = new Sprite(x, y, 10, temp);
+		MobileActor wolf = new MobileActor("Wolf", "It's a mean one. Mr. Grinch.", spr);
+		return wolf;
+	} //makeWolf()
+	
+	/**
+	 * Generates a fox Actor at a given loc.
+	 * @param x x loc
+	 * @param y y loc
+	 * @param s speed
+	 */
+	public static Actor makeFox(double x, double y) {
+		Image img = new Image("fox.png"); //http://i.imgur.com/HnW7KqH.png original
+		ImageView[] temp = new ImageView[1];
+		for(int i = 0; i < 1; i++) {
+				temp[i] = new ImageView(img);
+				temp[i].setViewport(new Rectangle2D(i * 192, 0, 192, 128));
+				temp[i].setOnMouseClicked(e -> System.out.println("Skkkrrreeeeeee."));
+		} //for 
+		Sprite spr = new Sprite(x, y, 10, temp);
+		MobileActor fox = new MobileActor("Fox", "Careful, this one's a trickster.", spr);
+		return fox;
+	} //makeFox()
+	
+	/**
 	 * Generates a grass Actor at a given loc.
 	 * @param x x loc
 	 * @param y y loc
@@ -417,6 +455,11 @@ public class PuppyPlaza extends Application {
 		   actors.add(torch);
 		   images.add(actors.get(i).nextSprite());
 	   } //for
+	   
+	   
+	   Actor fox = makeFox(random.nextDouble() * (1280.0 - 192.0), random.nextDouble() * (720.0 - 128.0));
+	   actors.add(fox);
+	   images.add(actors.get(actors.size() - 1).nextSprite());
 	   
 	   /*for(int i = 0; i < 15; i++) { //cols
 	        for(int j = 0; j < 8; j++) { //rows
