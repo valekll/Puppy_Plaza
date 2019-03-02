@@ -230,9 +230,9 @@ public class PuppyPlaza extends Application {
 	 * @param s speed
 	 */
 	public static Actor makeFox(double x, double y) {
-		Image img = new Image("fox.png"); //http://i.imgur.com/HnW7KqH.png original
-		ImageView[] temp = new ImageView[1];
-		for(int i = 0; i < 1; i++) {
+		Image img = new Image("fox_idle.png"); //http://i.imgur.com/HnW7KqH.png original
+		ImageView[] temp = new ImageView[2];
+		for(int i = 0; i < 2; i++) {
 				temp[i] = new ImageView(img);
 				temp[i].setViewport(new Rectangle2D(i * 192, 0, 192, 128));
 				temp[i].setOnMouseClicked(e -> System.out.println("Skkkrrreeeeeee."));
@@ -275,7 +275,7 @@ public class PuppyPlaza extends Application {
 	 */
 	public static ImageView makeTestGrass(double x, double y, int i) {
 		//Image img = new Image("test_grass13.png");
-		Image img = new Image("grass1.png");
+		Image img = new Image("grassTx004.png");
 		
 		/*if(i == 2) {
 			img = new Image("test_grass15.png");
@@ -301,6 +301,32 @@ public class PuppyPlaza extends Application {
 		temp.setY(y);
 		return temp;
 	} //makeTestGrass()
+	
+	/**
+	 * Generates a grass Actor at a given loc.
+	 * @param x x loc
+	 * @param y y loc
+	 */
+	public static ImageView makeHLGrass(double x, double y, int i) {
+		Image img = new Image("hlgrass1.png");
+		
+		if(i == 1) {
+			img = new Image("hlgrass2.png");
+		} //if
+		else if(i == 2) {
+			img = new Image("hlgrass3.png");
+		} //else if
+		else if(i == 3) {
+			img = new Image("hlgrass4.png");
+		} //else if
+		else if(i == 4) {
+			img = new Image("hlgrass5.png");
+		} //else if
+		ImageView temp = new ImageView(img);
+		temp.setX(x);
+		temp.setY(y);
+		return temp;
+	} //makeHLGrass()
 	
 	/**
 	 * Generates a brick at a given loc.
@@ -383,6 +409,7 @@ public class PuppyPlaza extends Application {
 
 	public void fillBackground() {
 		double s = 128;
+		double s2 = 64;
 		int width = 10;//40;
 		int height = 7;//23;
 		for(int i = 0; i < width; i++) {
@@ -405,6 +432,9 @@ public class PuppyPlaza extends Application {
 				} //else if
 				else if(j >= (height / 2)) {
 					background.add(makeTestGrass(s * (double)i, s * (double)j, random.nextInt(1)));
+					background.add(makeTestGrass(s * (double)i + s2, s * (double)j, random.nextInt(1)));
+					background.add(makeTestGrass(s * (double)i, s * (double)j + s2, random.nextInt(1)));
+					background.add(makeTestGrass(s * (double)i + s2, s * (double)j + s2, random.nextInt(1)));
 				} //else if
 				else {
 					//background.add(makeTestGrass(s * (double)i, s * (double)j, random.nextInt(10)));
@@ -412,6 +442,15 @@ public class PuppyPlaza extends Application {
 				} //else
 			} //for
 		} //for
+
+		background.add(makeHLGrass(256.0 - 64.0, 256.0, 4));
+		background.add(makeHLGrass(256.0 - 64.0, 256.0 + 64.0, 4));
+		background.add(makeHLGrass(256.0, 256.0, 0));
+		background.add(makeHLGrass(256.0 + 64.0, 256.0, 1));
+		background.add(makeHLGrass(256.0, 256.0 + 64.0, 2));
+		background.add(makeHLGrass(256.0 + 64.0, 256.0 + 64.0, 3));
+		background.add(makeHLGrass(256.0 + 128.0, 256.0, 4));
+		background.add(makeHLGrass(256.0 + 128.0, 256.0 + 64.0, 4));
 	} //fillBackGround()
 	
 	/**
